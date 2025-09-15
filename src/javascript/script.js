@@ -1,14 +1,14 @@
 /*
-  Refactor completo do script do site Days Clean.
-  Objetivo principal: reduzir o tamanho do chat (limitar mensagens exibidas)
-  + melhorias de performance e organização (event delegation, cache, debounce/throttle, observers).
+  Full refactor of the Days Clean site script (translated to English).
+  Main objective: reduce chat size (limit displayed messages)
+  + performance and organization improvements (event delegation, cache, debounce/throttle, observers).
 
-  Nota: preservei o comportamento original e alterei especificamente a lógica do chat para manter
-  apenas as últimas mensagens (maxMessages) e evitar que o container cresça indefinidamente.
+  Note: Preserved original behavior, only changed chat logic to keep
+  the last messages (maxMessages) and prevent the container from growing indefinitely.
 */
 
 /* =========================
-   Utilitários
+   Utilities
    ========================= */
 const $ = selector => document.querySelector(selector);
 const $$ = selector => Array.from(document.querySelectorAll(selector));
@@ -49,7 +49,7 @@ const rafThrottle = (fn) => {
     navClose.addEventListener('click', () => navMenu.classList.remove('show-menu'));
   }
 
-  // close mobile menu with delegation on click for performance
+  // close mobile menu with delegation
   document.addEventListener('click', (e) => {
     const target = e.target.closest('.nav__link');
     if (target && navMenu) navMenu.classList.remove('show-menu');
@@ -93,9 +93,7 @@ const rafThrottle = (fn) => {
     }
   }
 
-  // Use rAF throttle for smoothness
   window.addEventListener('scroll', rafThrottle(onScroll));
-  // run once on load
   document.addEventListener('DOMContentLoaded', onScroll);
 })();
 
@@ -145,7 +143,7 @@ const rafThrottle = (fn) => {
 })();
 
 /* =========================
-   Contact form (lightweight)
+   Contact form
    ========================= */
 (function contactForm() {
   const form = $('#contact-form');
@@ -161,20 +159,17 @@ const rafThrottle = (fn) => {
     const message = (fd.get('message') || '').trim();
 
     if (!name || !email || !phone || !service || !message) {
-      showNotification('Por favor, preencha todos os campos.', 'error');
+      showNotification('Please fill in all fields.', 'error');
       return;
     }
 
-    // simulate submission
-    showNotification('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success');
+    showNotification('Message sent successfully! We will contact you soon.', 'success');
     form.reset();
   });
 })();
 
 /* =========================
    Notification system
-   - reworked to minimize DOM thrash
-   - CSS deve existir em arquivo separado; inline styles usadas apenas como fallback
    ========================= */
 (function notifications() {
   const containerId = 'site-notifications-container';
@@ -198,10 +193,9 @@ const rafThrottle = (fn) => {
         <span class="notification__icon" aria-hidden="true"></span>
         <div class="notification__text">${message}</div>
       </div>
-      <button class="notification__close" aria-label="Fechar">&times;</button>
+      <button class="notification__close" aria-label="Close">&times;</button>
     `;
 
-    // keep DOM small by prepending and limiting count
     container.prepend(note);
     requestAnimationFrame(() => note.classList.add('notification--show'));
 
@@ -220,13 +214,7 @@ const rafThrottle = (fn) => {
 })();
 
 /* =========================
-   ChatAssistant (refatorado)
-   Principais mudanças para reduzir o tamanho do chat:
-   - Limite de mensagens exibidas (maxMessages)
-   - Reuso de templates de DOM
-   - Delegação de eventos
-   - Um único indicador de digitação
-   - Mensagens renderizadas usando fragmento
+   ChatAssistant (refactored)
    ========================= */
 class ChatAssistant {
   constructor(options = {}) {
@@ -237,25 +225,25 @@ class ChatAssistant {
     this.chatClose = $('#chat-close');
     this.chatAssistantBtn = $('#chat-assistant-btn');
     this.chatCTA = $('#chat-cta');
-    this.quickContainer = $('#chat-quick-replies'); // container (recommended)
+    this.quickContainer = $('#chat-quick-replies');
     this.chatNotification = $('#chat-notification');
 
     this.isOpen = false;
-    this.maxMessages = options.maxMessages || 40; // <-- principal ajuste para controlar tamanho
+    this.maxMessages = options.maxMessages || 40;
     this.typingId = 'chat-typing-indicator';
 
     this.responses = options.responses || {
-      'serviços disponíveis': 'Oferecemos os seguintes serviços:\n\n🏠 Limpeza Residencial\n🏢 Limpeza Comercial\n🏭 Limpeza Industrial\n🔨 Limpeza Pós-Obra\n🛋️ Limpeza de Estofados\n⚡ Emergência 24h\n\nQual serviço você gostaria de saber mais?',
-      'solicitar orçamento': 'Ótimo! Para solicitar um orçamento personalizado, preciso de algumas informações:\n\n📋 Tipo de serviço desejado\n📍 Localização\n📏 Tamanho do ambiente\n📅 Frequência desejada',
-      'horário de funcionamento': 'Seg a Sex: 8h-18h\nSáb: 8h-12h\nDom: Fechado\nEmergências 24h disponíveis.',
-      'falar com atendente': 'Vou conectá-lo com um de nossos atendentes!\n📞 (11) 99999-9999\n📧 contato@daysclean.com.br',
-      'localização': 'Rua das Flores, 123 - Centro, São Paulo - SP',
-      'emergência': 'Para emergências ligue: (11) 99999-9999',
-      'preços': 'Preços personalizados conforme tipo de serviço, tamanho, frequência e localização.',
-      'produtos': 'Utilizamos produtos ecológicos e certificados, seguros para crianças e pets.'
+      'available services': 'We offer the following services:\n\n🏠 Residential Cleaning\n🏢 Commercial Cleaning\n🏭 Industrial Cleaning\n🔨 Post-Construction Cleaning\n🛋️ Upholstery Cleaning\n⚡ 24h Emergency\n\nWhich service would you like to know more about?',
+      'request quote': 'Great! To request a personalized quote, I need some information:\n\n📋 Type of service\n📍 Location\n📏 Size of the space\n📅 Desired frequency',
+      'working hours': 'Mon-Fri: 8am-6pm\nSat: 8am-12pm\nSun: Closed\n24h Emergency available.',
+      'talk to agent': 'I’ll connect you with one of our agents!\n📞 (11) 99999-9999\n📧 contact@daysclean.com.br',
+      'location': 'Rua das Flores, 123 - Downtown, São Paulo - SP',
+      'emergency': 'For emergencies, call: (11) 99999-9999',
+      'prices': 'Prices are customized according to service type, size, frequency, and location.',
+      'products': 'We use eco-friendly and certified products, safe for children and pets.'
     };
 
-    this.dateFormatter = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    this.dateFormatter = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit' });
 
     this.init();
   }
@@ -265,11 +253,9 @@ class ChatAssistant {
     if (this.chatCTA) this.chatCTA.addEventListener('click', (e) => { e.preventDefault(); this.openChat(); });
     if (this.chatClose) this.chatClose.addEventListener('click', () => this.closeChat());
 
-    // send message via button or Enter
     if (this.chatSend) this.chatSend.addEventListener('click', () => this.sendMessage());
     if (this.chatInput) this.chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') this.sendMessage(); });
 
-    // delegated quick replies handler (recommended HTML: container with .quick-reply buttons)
     document.addEventListener('click', (e) => {
       const qr = e.target.closest('.quick-reply');
       if (!qr) return;
@@ -280,11 +266,9 @@ class ChatAssistant {
       }
     });
 
-    // initial notification bubble
     setTimeout(() => this.showNotification(), 3000);
   }
 
-  // keep only last N messages in DOM
   trimMessages() {
     if (!this.chatMessages) return;
     while (this.chatMessages.children.length > this.maxMessages) {
@@ -349,7 +333,6 @@ class ChatAssistant {
     this.scrollToBottom();
   }
 
-  // basic html escape
   escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, (s) => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -361,7 +344,6 @@ class ChatAssistant {
     this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
   }
 
-  // typing indicator (one at a time)
   showTypingIndicator() {
     if (!this.chatMessages) return;
     if (this.chatMessages.querySelector(`#${this.typingId}`)) return;
@@ -370,7 +352,7 @@ class ChatAssistant {
     el.className = 'message assistant-message typing-message';
     el.innerHTML = `
       <div class="typing-indicator">
-        <span>Digitando</span>
+        <span>Typing</span>
         <div class="typing-dots">
           <div class="typing-dot"></div>
           <div class="typing-dot"></div>
@@ -388,13 +370,12 @@ class ChatAssistant {
 
   processMessage(message) {
     this.showTypingIndicator();
-    // simulate processing delay
     setTimeout(() => {
       this.hideTypingIndicator();
       const lower = message.toLowerCase();
       let resp = this.matchResponse(lower);
       if (!resp) {
-        resp = 'Obrigado pela sua mensagem! Para melhor atendê-lo, você pode:\n\n📞 Ligar: (11) 99999-9999\n📧 Email: contato@daysclean.com.br';
+        resp = 'Thank you for your message! To better assist you, you can:\n\n📞 Call: +1 (954) 695-0198\n📧 Email: DAYSCLEANINGSOLUTIONS@GMAIL.COM';
       }
       this.sendAssistantMessage(resp);
     }, 900);
@@ -403,17 +384,15 @@ class ChatAssistant {
   matchResponse(message) {
     for (const key of Object.keys(this.responses)) {
       if (message.includes(key.toLowerCase())) return this.responses[key];
-      // also match by single keywords
       const kws = key.split(' ');
       if (kws.some(k => k && message.includes(k))) return this.responses[key];
     }
 
-    // greetings and thanks
-    if (this.containsAny(message, ['olá', 'oi', 'bom dia', 'boa tarde', 'boa noite'])) {
-      return 'Olá! Seja bem-vindo à Days Clean! 😊\n\nComo posso ajudá-lo hoje?';
+    if (this.containsAny(message, ['hello', 'hi', 'good morning', 'good afternoon', 'good evening'])) {
+      return 'Hello! Welcome to Days Clean! 😊\n\nHow can I help you today?';
     }
-    if (this.containsAny(message, ['obrigado', 'obrigada', 'valeu'])) {
-      return 'Fico feliz em ajudar! 😊';
+    if (this.containsAny(message, ['thanks', 'thank you'])) {
+      return 'Glad to help! 😊';
     }
     return null;
   }
@@ -457,28 +436,24 @@ class ChatAssistant {
    Page init
    ========================= */
 document.addEventListener('DOMContentLoaded', () => {
-  // initialize chat
   try {
     window.chatAssistant = new ChatAssistant({ maxMessages: 40 });
   } catch (err) {
-    console.error('Falha ao inicializar chat assistant', err);
+    console.error('Failed to initialize chat assistant', err);
   }
 
-  // small loading class
   document.body.classList.add('loaded');
 
-  // subtle stagger for cards
   const cards = $$('.service__card, .before-after__item, .portfolio__item');
   cards.forEach((c, i) => { c.style.animationDelay = `${i * 0.08}s`; });
 
-  // preload critical images
   ['hero-image.jpg', 'about-image.jpg'].forEach(src => { const i = new Image(); i.src = src; });
 
   console.log('Days Clean refactor loaded');
 });
 
 /* =========================
-   Service worker registration (unchanged behavior)
+   Service worker registration
    ========================= */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -488,7 +463,7 @@ if ('serviceWorker' in navigator) {
 }
 
 /* =========================
-   Export for testing (if environment supports it)
+   Export for testing
    ========================= */
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { ChatAssistant };
