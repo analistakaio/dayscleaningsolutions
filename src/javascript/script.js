@@ -233,7 +233,7 @@ class ChatAssistant {
     this.typingId = 'chat-typing-indicator';
 
     this.responses = options.responses || {
-      'available services': 'We offer the following services:\n\n🏠 Residential Cleaning\n🏢 Commercial Cleaning\n🏭 Industrial Cleaning\n🔨 Post-Construction Cleaning\n🛋️ Upholstery Cleaning\n⚡ 24h Emergency\n\nWhich service would you like to know more about?',
+      'available services': 'We offer the following services:\n\n🏠 Residential Cleaning\n🏢 Commercial Cleaning\n\n🔨 Post-Construction Cleaning\n🛋️ Upholstery Cleaning\n⚡ 24h Emergency\n\nWhich service would you like to know more about?',
       'request quote': 'Great! To request a personalized quote, I need some information:\n\n📋 Type of service\n📍 Location\n📏 Size of the space\n📅 Desired frequency',
       'working hours': 'Mon-Fri: 8am-6pm\nSat: 8am-12pm\nSun: Closed\n24h Emergency available.',
       'talk to agent': 'I’ll connect you with one of our agents!\n📞 +1 (954) 695-0198\n📧 DAYSCLEANINGSOLUTIONS@GMAIL.COM',
