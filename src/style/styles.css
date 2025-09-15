@@ -1009,6 +1009,16 @@ button {
   box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
 }
 
+.messenger-btn {
+  background: linear-gradient(135deg, #2539d3 0%, #128c7e 100%);
+}
+
+.messenger-btn:hover {
+  transform: translateY(-5px) scale(1.15) rotate(5deg);
+  box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
+}
+
+
 /* Floating button animations */
 @keyframes float {
   0%, 100% {
