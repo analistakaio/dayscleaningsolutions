@@ -1465,9 +1465,11 @@ button {
 }
 
 @media screen and (max-width: 768px) {
+ @media screen and (max-width: 768px) {
+  /* Navigation Menu */
   .nav__menu {
     position: fixed;
-    background-color: var(--body-color);
+    background-color: var(--body-color); /* fundo sólido */
     width: 80%;
     height: 100%;
     top: 0;
@@ -1476,16 +1478,19 @@ button {
     padding: 4rem 0 0 3rem;
     transition: right 0.3s ease;
   }
-  
+
   .nav__menu.show-menu {
     right: 0;
   }
-  
+
   .nav__list {
     flex-direction: column;
     row-gap: 1.5rem;
+    background-color: var(--body-color); /* fundo sólido */
+    padding: 1rem;
+    border-radius: 8px;
   }
-  
+
   .nav__close {
     display: block;
     position: absolute;
@@ -1495,46 +1500,54 @@ button {
     color: var(--title-color);
     cursor: pointer;
   }
-  
+
   .nav__toggle {
     display: block;
     font-size: 1.25rem;
     color: var(--title-color);
     cursor: pointer;
   }
-  
+
+  /* Sections */
   .section {
-    padding: 2rem 0 4rem;
+    padding: 2rem 1rem 4rem;
+    background-color: var(--body-color); /* fundo sólido para todas as seções */
+    border-radius: 8px;
   }
-  
+
   .hero {
     padding-top: calc(var(--header-height) + 1rem);
   }
-  
+
   .services__content {
     grid-template-columns: 1fr;
   }
-  
+
+  /* Floating buttons */
   .floating-buttons {
     left: 1rem;
     right: 1rem;
   }
-  
+
   .floating-btn {
     width: 50px;
     height: 50px;
     font-size: 1.25rem;
   }
-  
+
   .floating-btn__text {
     right: 60px;
   }
-  
+
+  /* Chat window */
   .chat-window {
     left: 1rem;
     right: 1rem;
     width: auto;
+    background-color: var(--body-color); /* fundo sólido */
+    border-radius: 8px;
   }
+}
 }
 
 @media screen and (max-width: 576px) {
